@@ -8,6 +8,7 @@ import com.kineticdata.bridgehub.adapter.sql.SqlQualificationParameter;
 import com.kineticdata.bridgehub.adapter.sql.SqlQualificationParser;
 import com.kineticdata.commons.v1.config.ConfigurableProperty;
 import com.kineticdata.commons.v1.config.ConfigurablePropertyMap;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -28,6 +29,20 @@ public class Db2Adapter extends SqlAdapter {
 
     /** Defines the logger */
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Db2Adapter.class);
+
+    /** Adapter version constant. */
+    public static String VERSION;
+    /** Load the properties version from the version.properties file. */
+    static {
+        try {
+            java.util.Properties properties = new java.util.Properties();
+            properties.load(Db2Adapter.class.getResourceAsStream("/"+Db2Adapter.class.getName()+".version"));
+            VERSION = properties.getProperty("version");
+        } catch (IOException e) {
+            logger.warn("Unable to load "+Db2Adapter.class.getName()+" version properties.", e);
+            VERSION = "Unknown";
+        }
+    }
 
     /** Defines the collection of property names for the adapter. */
     public static class Properties {
@@ -56,7 +71,7 @@ public class Db2Adapter extends SqlAdapter {
     
     @Override
     public String getVersion() {
-       return  "1.0.0";
+       return VERSION;
     }
     
     @Override
